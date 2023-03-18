@@ -15,17 +15,17 @@ for line in sys.stdin:
 
     if current_key != key:
         was_open = False
-        if current_key and command_sum != 0:
+        if current_key and command_sum != 0 and session_sum != 0:
             print("{} \t {:.2f} \t {}".format(current_key, command_sum / session_sum, session_sum))
         command_sum = 0
         session_sum = 0
     if event == '0':
         was_open = True
         session_sum += 1
-    if was_open and event == '1':
+    if event == '1':
         command_sum += 1
     current_key = key
 
-if current_key and command_sum != 0:
+if current_key and command_sum != 0 and session_sum != 0:
     print("{}\t{:.2f}\t{}".format(current_key, command_sum / session_sum, session_sum))
 
