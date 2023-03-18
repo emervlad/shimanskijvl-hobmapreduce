@@ -3,36 +3,29 @@
 import sys
 import re
 
-proper_name = re.compile(r"^[A-Z][a-z]{5,8}$")
-
-proper_name_lower = re.compile(r"^[a-z]{6,9}$")
-
 current_key = None
-lower_last = None
-word_sum = 0
-flag_dot = 1
-
-stop_words = set()
+was_open = False
+session_sum = 0
+command_sum = 0
 
 for line in sys.stdin:
-    try:
-        key, count = line.strip().split('\t', 1)
-    except ValueError as e:
-        print(line)
-        continue
-    #key, count = line.strip().split('\t', 1)
-    count = int(count)
-    flag = count % 2
-    count = int(count / 2)
+    key, time = line.strip().split('\t', 1)
+    event = time[-1]
+    #print(event)
+
     if current_key != key:
-        if current_key and flag_dot != 0 and word_sum != 0:
-            print("{}\t{}".format(current_key, word_sum))
-        word_sum = 0
-        flag_dot = 1
-    word_sum += count
-    flag_dot *= flag
+        was_open = False
+        if current_key and command_sum != 0:
+            print("{} \t {:.2f} \t {}".format(current_key, command_sum / session_sum, session_sum))
+        command_sum = 0
+        session_sum = 0
+    if event == '0':
+        was_open = True
+        session_sum += 1
+    if was_open and event == '1':
+        command_sum += 1
     current_key = key
 
-if current_key and flag_dot != 0 and word_sum != 0:
-    print("{}\t{}".format(current_key, word_sum))
+if current_key and command_sum != 0:
+    print("{}\t{:.2f}\t{}".format(current_key, command_sum / session_sum, session_sum))
 
