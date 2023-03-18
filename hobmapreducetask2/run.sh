@@ -16,4 +16,4 @@ yarn jar /opt/cloudera/parcels/CDH/lib/hadoop-mapreduce/hadoop-streaming.jar \
     -output ${OUT_DIR} > /dev/null
 
 #hdfs dfs -ls ${OUT_DIR}
-hdfs dfs -cat ${OUT_DIR}/part-0000* | sort -k2nr | head -10
+hdfs dfs -cat ${OUT_DIR}/part-0000* | sort -k2nr | head -5
